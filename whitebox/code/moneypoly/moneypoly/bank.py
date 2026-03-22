@@ -2,7 +2,6 @@
 Financial subsystem for MoneyPoly.
 Handles the bank's cash reserves, loan issuance, and payment processing.
 """
-import math
 from moneypoly.config import BANK_STARTING_FUNDS
 
 

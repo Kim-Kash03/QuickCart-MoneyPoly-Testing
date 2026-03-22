@@ -2,10 +2,8 @@
 Core game controller for MoneyPoly.
 Coordinates turns, players, board, bank, and cards to run a session.
 """
-import os
 
 from moneypoly.config import (
-    GO_TO_JAIL_POSITION,
     JAIL_FINE,
     AUCTION_MIN_INCREMENT,
     INCOME_TAX_AMOUNT,

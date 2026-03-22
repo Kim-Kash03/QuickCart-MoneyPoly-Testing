@@ -1,8 +1,16 @@
+"""
+Financial subsystem for MoneyPoly.
+Handles the bank's cash reserves, loan issuance, and payment processing.
+"""
 import math
 from moneypoly.config import BANK_STARTING_FUNDS
 
 
 class Bank:
+    """
+    The Bank manages the game's central funds and handles all transactions
+    not directly between players, such as taxes, fines, and loans.
+    """
     def __init__(self):
         self._funds = BANK_STARTING_FUNDS
         self._loans_issued = []

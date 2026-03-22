@@ -1,3 +1,6 @@
+"""
+Handles rolling of dice and tracking of consecutive doubles.
+"""
 import random
 from moneypoly.config import BOARD_SIZE
 

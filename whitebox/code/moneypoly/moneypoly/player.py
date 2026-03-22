@@ -1,3 +1,7 @@
+"""
+Player representation and state management.
+Tracks location, balance, and holdings for each participant.
+"""
 import sys
 from moneypoly.config import STARTING_BALANCE, BOARD_SIZE, GO_SALARY, JAIL_POSITION
 

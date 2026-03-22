@@ -1,3 +1,7 @@
+"""
+User interface utilities for the MoneyPoly CLI.
+Handles formatting and printing of game state information.
+"""
 def print_banner(title):
     """Print a decorated section header."""
     width = 52

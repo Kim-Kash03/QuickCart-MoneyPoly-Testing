@@ -1,3 +1,6 @@
+"""
+Property and group classes for the MoneyPoly game board.
+"""
 class Property:
     """Represents a single purchasable property tile on the MoneyPoly board."""
 
@@ -62,6 +65,7 @@ class Property:
 
 
 class PropertyGroup:
+    """Represents a set of properties belonging to the same colour group."""
     def __init__(self, name, color):
         self.name = name
         self.color = color

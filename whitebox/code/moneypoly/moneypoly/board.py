@@ -1,3 +1,6 @@
+"""
+The Board handles tile lookup and property management on the game board.
+"""
 from moneypoly.property import Property, PropertyGroup
 from moneypoly.config import (
     JAIL_POSITION,

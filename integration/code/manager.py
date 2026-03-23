@@ -1,9 +1,10 @@
 from modules.registration import Registration
+from modules.crew import CrewManagement
 
 class StreetRaceManager:
     def __init__(self):
         self.registration = Registration()
-        self.crew = None
+        self.crew = CrewManagement(self.registration)
         self.inventory = None
         self.race_management = None
         self.results = None
@@ -12,5 +13,5 @@ class StreetRaceManager:
         self.reputation = None
 
     def run(self):
-        print("StreetRace Manager Initialized with Registration Module.")
+        print("StreetRace Manager Initialized with Registration and Crew Modules.")
         # Placeholder for main loop or logic

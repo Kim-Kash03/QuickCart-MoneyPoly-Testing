@@ -13,7 +13,12 @@ def format_inventory(inventory):
     if not cars:
         output += "None\n"
     else:
-        car_list = [f"{name} ({status})" for name, status in cars.items()]
+        car_list = []
+        for name, data in cars.items():
+            status = data["status"]
+            perf = data.get("performance", 1.0)
+            tier = data.get("tier", 0)
+            car_list.append(f"{name} [{status}] (Perf: {perf:.1f}, Tier: {tier})")
         output += ", ".join(car_list) + "\n"
     
     # Other items

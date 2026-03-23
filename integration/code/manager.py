@@ -4,6 +4,7 @@ from modules.inventory import validate_item_type
 from modules.race import validate_race_participants
 from modules.results import calculate_prize
 from modules.mission import validate_mission_requirements
+from modules.tuning import validate_tuning_resources, apply_tuning
 
 class StreetRaceManager:
     def __init__(self):
@@ -55,21 +56,25 @@ class StreetRaceManager:
             print(f"Error: Invalid item type {item_type}.")
             return False
         if item_type == "cars":
-            self.inventory["cars"][item_name] = "Healthy"
+            self.inventory["cars"][item_name] = {
+                "status": "Healthy",
+                "performance": 1.0,
+                "tier": 0
+            }
         else:
             self.inventory[item_type].append(item_name)
         return True
 
     def damage_car(self, car_name):
         if car_name in self.inventory["cars"]:
-            self.inventory["cars"][car_name] = "Damaged"
+            self.inventory["cars"][car_name]["status"] = "Damaged"
             print(f"Car {car_name} is now DAMAGED!")
             return True
         return False
 
     def repair_car(self, car_name):
         if car_name in self.inventory["cars"]:
-            self.inventory["cars"][car_name] = "Healthy"
+            self.inventory["cars"][car_name]["status"] = "Healthy"
             print(f"Car {car_name} is now REPAIRED!")
             return True
         return False
@@ -134,7 +139,7 @@ class StreetRaceManager:
             return False
         
         if mission_type == "repair":
-            damaged_cars = [name for name, status in self.inventory["cars"].items() if status == "Damaged"]
+            damaged_cars = [name for name, data in self.inventory["cars"].items() if data["status"] == "Damaged"]
             if not damaged_cars:
                 print("No cars need repair.")
                 return False
@@ -147,6 +152,32 @@ class StreetRaceManager:
             "status": "Started"
         }
         self.missions.append(mission)
+        return True
+
+    def upgrade_car(self, car_name, tier):
+        if car_name not in self.inventory["cars"]:
+            print(f"Error: Car {car_name} not found.")
+            return False
+        
+        valid, message = validate_tuning_resources(self, car_name, tier)
+        if not valid:
+            print(f"Error: {message}")
+            return False
+        
+        # Deduct resources
+        config = {
+            1: {"cost": 500, "parts_needed": 1},
+            2: {"cost": 1500, "parts_needed": 2},
+            3: {"cost": 5000, "parts_needed": 3}
+        }[tier]
+        
+        self.inventory["cash"] -= config["cost"]
+        for _ in range(config["parts_needed"]):
+            self.inventory["parts"].pop(0)
+            
+        # Apply tuning
+        self.inventory["cars"][car_name] = apply_tuning(self.inventory["cars"][car_name], tier)
+        print(f"Car {car_name} upgraded to Tier {tier}!")
         return True
 
     def get_missions(self):

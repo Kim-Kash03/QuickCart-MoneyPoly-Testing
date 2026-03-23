@@ -22,7 +22,8 @@ def main():
         print("10. View Race Results")
         print("11. Assign Mission")
         print("12. View Missions")
-        print("13. Exit")
+        print("13. Upgrade/Tune Car")
+        print("14. Exit")
         
         choice = input("Select an option: ")
         
@@ -120,6 +121,15 @@ def main():
                     print(f"Name: {m['name']} | Type: {m['type']} | Status: {m['status']}")
 
         elif choice == '13':
+            car_name = input("Enter car name: ")
+            try:
+                tier = int(input("Enter upgrade tier (1, 2, 3): "))
+                if manager.upgrade_car(car_name, tier):
+                    print("Tuning complete.")
+            except ValueError:
+                print("Invalid input. Tier must be 1, 2, or 3.")
+
+        elif choice == '14':
             print("Exiting StreetRace Manager. Stay safe on the streets!")
             break
         

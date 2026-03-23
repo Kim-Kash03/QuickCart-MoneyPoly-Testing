@@ -19,7 +19,16 @@ The `main.py` CLI uses a central `manager.py` to route data between modules. Bus
 - **Upgrade Constraints**: `upgrade_car` checks for sufficient cash and parts in inventory *and* verifies that a mechanic exists in the crew before applying the performance boost.
 
 ## Testing Strategy
-Integration tests were designed using `pytest` in `integration_tests.py` to verify data flow across all components, simulating a full user journey: Registration -> Inventory Setup -> Racing -> Checking Cash/Reputation/Upgrades -> Damage/Repair Missions. All edge cases (e.g., non-drivers racing, insufficient cash for tuning) were tested and validated.
+Integration tests were designed using `pytest` in `tests/integration_tests.py` to verify data flow across all components, simulating a full user journey: Registration -> Inventory Setup -> Racing -> Checking Cash/Reputation/Upgrades -> Damage/Repair Missions. All edge cases (e.g., non-drivers racing, insufficient cash for tuning) were tested and validated.
 
-## Version Control
-The project was initialized inside `integration/code` and all components were committed to Git, fulfilling the CI/CD initialization requirement.
+## Verification Results
+The integration suite in `tests/integration_tests.py` was executed using `pytest`. All test cases passed successfully, confirming:
+- **Registration & Roles**: Crew members can be registered and their roles (driver, mechanic, strategist) are correctly validated.
+- **Racing**: Drivers and cars are correctly matched for races; non-drivers are blocked.
+- **Economics**: Race prizes and sponsorship bonuses correctly flow into the inventory cash balance.
+- **Maintenance**: Car damage is correctly handled and repair missions (requiring mechanics) successfully restore car health.
+- **Mission Planning**: Complex missions (like 'heist') correctly verify that all required roles are present in the crew.
+- **Tuning**: Multi-resource constraints (cash, parts, and mechanic) for car upgrades are enforced.
+- **Reputation**: Winning races correctly builds team fame and unlocks tiered sponsorship rewards.
+
+Final status: **System Integrated and Verified.**

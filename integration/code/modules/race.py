@@ -1,5 +1,4 @@
 # Race Management Module
-
 def validate_race_participants(manager, driver_id, car_name):
     # Check if driver exists
     crew = manager.get_crew()

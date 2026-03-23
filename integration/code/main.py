@@ -20,7 +20,9 @@ def main():
         print("8. View Scheduled Races")
         print("9. Record Race Result")
         print("10. View Race Results")
-        print("11. Exit")
+        print("11. Assign Mission")
+        print("12. View Missions")
+        print("13. Exit")
         
         choice = input("Select an option: ")
         
@@ -103,6 +105,21 @@ def main():
                     print(format_result(race))
 
         elif choice == '11':
+            mission_name = input("Enter mission name: ")
+            print("Types: delivery, rescue, heist, repair")
+            mission_type = input("Enter mission type: ")
+            if manager.assign_mission(mission_name, mission_type):
+                print(f"Mission '{mission_name}' assigned successfully.")
+
+        elif choice == '12':
+            missions = manager.get_missions()
+            if not missions:
+                print("No missions assigned.")
+            else:
+                for m in missions:
+                    print(f"Name: {m['name']} | Type: {m['type']} | Status: {m['status']}")
+
+        elif choice == '13':
             print("Exiting StreetRace Manager. Stay safe on the streets!")
             break
         

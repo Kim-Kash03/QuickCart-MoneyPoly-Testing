@@ -1,3 +1,5 @@
+import random
+
 PRIZES = {
     1: 1000, # 1st place
     2: 500,  # 2nd place

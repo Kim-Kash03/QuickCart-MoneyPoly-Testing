@@ -3,12 +3,13 @@ from modules.crew import validate_role, validate_skill_level
 from modules.inventory import validate_item_type
 from modules.race import validate_race_participants
 from modules.results import calculate_prize
+from modules.mission import validate_mission_requirements
 
 class StreetRaceManager:
     def __init__(self):
         self.crew = {} # member_id: {name, role, skill_level}
         self.inventory = {
-            "cars": [],
+            "cars": {}, # car_name: status (Healthy, Damaged)
             "parts": [],
             "tools": [],
             "cash": 0
@@ -53,8 +54,25 @@ class StreetRaceManager:
         if not validate_item_type(item_type):
             print(f"Error: Invalid item type {item_type}.")
             return False
-        self.inventory[item_type].append(item_name)
+        if item_type == "cars":
+            self.inventory["cars"][item_name] = "Healthy"
+        else:
+            self.inventory[item_type].append(item_name)
         return True
+
+    def damage_car(self, car_name):
+        if car_name in self.inventory["cars"]:
+            self.inventory["cars"][car_name] = "Damaged"
+            print(f"Car {car_name} is now DAMAGED!")
+            return True
+        return False
+
+    def repair_car(self, car_name):
+        if car_name in self.inventory["cars"]:
+            self.inventory["cars"][car_name] = "Healthy"
+            print(f"Car {car_name} is now REPAIRED!")
+            return True
+        return False
 
     def update_cash(self, amount):
         self.inventory["cash"] += amount
@@ -84,7 +102,6 @@ class StreetRaceManager:
         return self.races
 
     def record_race_result(self, race_id, position):
-        # Find scheduled race
         race = next((r for r in self.races if r["id"] == race_id and r["status"] == "Scheduled"), None)
         if not race:
             print(f"Error: Scheduled race with ID {race_id} not found.")
@@ -95,10 +112,12 @@ class StreetRaceManager:
         race["position"] = position
         race["prize"] = prize
         
-        # Update Inventory Cash
         self.update_cash(prize)
+
+        import random
+        if random.random() < 0.3:
+            self.damage_car(race["car_name"])
         
-        # Update Driver Ranking (simple skill increase if 1st place)
         if position == 1:
             member_id = race["driver_id"]
             current_skill = self.crew[member_id]["skill_level"]
@@ -107,6 +126,31 @@ class StreetRaceManager:
                 print(f"Driver {race['driver_name']} skill level increased to {self.crew[member_id]['skill_level']}!")
         
         return True
+
+    def assign_mission(self, mission_name, mission_type):
+        valid, message = validate_mission_requirements(self, mission_type)
+        if not valid:
+            print(f"Error: {message}")
+            return False
+        
+        if mission_type == "repair":
+            damaged_cars = [name for name, status in self.inventory["cars"].items() if status == "Damaged"]
+            if not damaged_cars:
+                print("No cars need repair.")
+                return False
+            car_to_repair = damaged_cars[0]
+            self.repair_car(car_to_repair)
+
+        mission = {
+            "name": mission_name,
+            "type": mission_type,
+            "status": "Started"
+        }
+        self.missions.append(mission)
+        return True
+
+    def get_missions(self):
+        return self.missions
 
     def get_crew(self):
         return self.crew

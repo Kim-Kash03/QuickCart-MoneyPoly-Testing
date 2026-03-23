@@ -78,8 +78,8 @@ class TestPlayer(unittest.TestCase):
         # Branch/Variable state: net worth calculation
         self.player.add_property(self.prop1)
         # BUG: net_worth does not aggregate property value. Stays at 1500.
-        # Intended: 1560 (1500 balance + 60 property price)
-        self.assertEqual(self.player.net_worth(), 1560)
+        # Intended: 1600 (1500 balance + 100 property price from setUp)
+        self.assertEqual(self.player.net_worth(), 1600)
 
     def test_is_bankrupt(self):
         # Branch/Edge case: bankruptcy check

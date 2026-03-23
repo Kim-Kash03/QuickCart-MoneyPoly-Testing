@@ -5,6 +5,7 @@ from modules.race import validate_race_participants
 from modules.results import calculate_prize
 from modules.mission import validate_mission_requirements
 from modules.tuning import validate_tuning_resources, apply_tuning
+from modules.reputation import calculate_rep_gain, check_for_new_sponsor
 
 class StreetRaceManager:
     def __init__(self):
@@ -17,6 +18,8 @@ class StreetRaceManager:
         }
         self.races = []
         self.missions = []
+        self.reputation = 0
+        self.active_sponsor = None
 
     def register_member(self, name, role):
         if not validate_registration(name, role):
@@ -130,6 +133,23 @@ class StreetRaceManager:
                 self.crew[member_id]["skill_level"] += 1
                 print(f"Driver {race['driver_name']} skill level increased to {self.crew[member_id]['skill_level']}!")
         
+        # Update Reputation
+        rep_gain = calculate_rep_gain(position)
+        if rep_gain > 0:
+            previous_rep = self.reputation
+            self.reputation += rep_gain
+            print(f"Team gained {rep_gain} reputation points! (Total: {self.reputation})")
+            
+            # Check for new sponsorships
+            sponsor_level, sponsor_data = check_for_new_sponsor(self.reputation, previous_rep)
+            if sponsor_level:
+                self.active_sponsor = sponsor_data["name"]
+                self.update_cash(sponsor_data["cash_bonus"])
+                for _ in range(sponsor_data["parts_bonus"]):
+                    self.add_inventory_item("parts", "Sponsor Part")
+                print(f"*** NEW SPONSOR UNLOCKED: {sponsor_data['name']} ***")
+                print(f"Bonus Received: ${sponsor_data['cash_bonus']} and {sponsor_data['parts_bonus']} parts.")
+        
         return True
 
     def assign_mission(self, mission_name, mission_type):
@@ -185,3 +205,9 @@ class StreetRaceManager:
 
     def get_crew(self):
         return self.crew
+
+    def get_reputation_status(self):
+        return {
+            "reputation": self.reputation,
+            "sponsor": self.active_sponsor
+        }

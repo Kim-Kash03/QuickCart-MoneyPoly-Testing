@@ -23,7 +23,8 @@ def main():
         print("11. Assign Mission")
         print("12. View Missions")
         print("13. Upgrade/Tune Car")
-        print("14. Exit")
+        print("14. View Team Reputation")
+        print("15. Exit")
         
         choice = input("Select an option: ")
         
@@ -130,6 +131,12 @@ def main():
                 print("Invalid input. Tier must be 1, 2, or 3.")
 
         elif choice == '14':
+            status = manager.get_reputation_status()
+            print("--- Team Status ---")
+            print(f"Reputation Points: {status['reputation']}")
+            print(f"Active Sponsor: {status['sponsor'] if status['sponsor'] else 'None'}")
+
+        elif choice == '15':
             print("Exiting StreetRace Manager. Stay safe on the streets!")
             break
         

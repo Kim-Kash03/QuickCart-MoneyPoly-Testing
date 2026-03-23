@@ -2,20 +2,28 @@
 Player representation and state management.
 Tracks location, balance, and holdings for each participant.
 """
+from dataclasses import dataclass
 from moneypoly.config import STARTING_BALANCE, BOARD_SIZE, GO_SALARY, JAIL_POSITION
+
+
+@dataclass
+class JailStatus:
+    """Dataclass to track the jail status of a player."""
+    in_jail: bool = False
+    jail_turns: int = 0
+    get_out_of_jail_cards: int = 0
 
 
 class Player:
     """Represents a single player in a MoneyPoly game."""
+    # pylint: disable=too-many-instance-attributes
 
     def __init__(self, name, balance=STARTING_BALANCE):
         self.name = name
         self.balance = balance
         self.position = 0
         self.properties = []
-        self.in_jail = False
-        self.jail_turns = 0
-        self.get_out_of_jail_cards = 0
+        self._jail_status = JailStatus()
         self.is_eliminated = False
 
 
@@ -87,3 +95,30 @@ class Player:
 
     def __repr__(self):
         return f"Player({self.name!r}, balance={self.balance}, pos={self.position})"
+
+    @property
+    def in_jail(self):
+        """Return True if the player is currently in jail."""
+        return self._jail_status.in_jail
+
+    @in_jail.setter
+    def in_jail(self, value):
+        self._jail_status.in_jail = value
+
+    @property
+    def jail_turns(self):
+        """Return the number of turns the player has spent in jail."""
+        return self._jail_status.jail_turns
+
+    @jail_turns.setter
+    def jail_turns(self, value):
+        self._jail_status.jail_turns = value
+
+    @property
+    def get_out_of_jail_cards(self):
+        """Return the number of 'Get Out of Jail Free' cards the player has."""
+        return self._jail_status.get_out_of_jail_cards
+
+    @get_out_of_jail_cards.setter
+    def get_out_of_jail_cards(self, value):
+        self._jail_status.get_out_of_jail_cards = value

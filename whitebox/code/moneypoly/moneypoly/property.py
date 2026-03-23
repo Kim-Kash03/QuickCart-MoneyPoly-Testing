@@ -1,25 +1,67 @@
 """
 Property and group classes for the MoneyPoly game board.
 """
+from dataclasses import dataclass
+
+@dataclass
+class PropertyConfig:
+    """Configuration data for initializing a property."""
+    name: str
+    position: int
+    price: int
+    base_rent: int
+    group: any = None
+
 class Property:
     """Represents a single purchasable property tile on the MoneyPoly board."""
 
     FULL_GROUP_MULTIPLIER = 2
 
-    def __init__(self, name, position, price, base_rent, group=None):
-        self.name = name
-        self.position = position
-        self.price = price
-        self.base_rent = base_rent
-        self.mortgage_value = price // 2
+    @classmethod
+    def create(cls, name, position, price, base_rent, group=None):
+        """Create a new Property instance using positional arguments."""
+        # pylint: disable=too-many-arguments,too-many-positional-arguments
+        return cls(PropertyConfig(name, position, price, base_rent, group))
+
+    def __init__(self, config):
+        self.config = config
+        self.mortgage_value = self.config.price // 2
         self.owner = None
         self.is_mortgaged = False
         self.houses = 0
 
         # Register with the group immediately on creation
-        self.group = group
-        if group is not None and self not in group.properties:
-            group.properties.append(self)
+        if self.config.group is not None and self not in self.config.group.properties:
+            self.config.group.properties.append(self)
+
+    @property
+    def name(self):
+        """Return the name of the property."""
+        return self.config.name
+
+    @property
+    def position(self):
+        """Return the board position of the property."""
+        return self.config.position
+
+    @property
+    def price(self):
+        """Return the purchase price of the property."""
+        return self.config.price
+
+    @property
+    def base_rent(self):
+        """Return the base rent value of the property."""
+        return self.config.base_rent
+
+    @property
+    def group(self):
+        """Return the colour group of the property."""
+        return self.config.group
+
+    @group.setter
+    def group(self, group_obj):
+        self.config.group = group_obj
 
     def get_rent(self):
         """

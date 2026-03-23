@@ -1,21 +1,30 @@
-from modules.registration import Registration
-from modules.crew import CrewManagement
-from modules.inventory import Inventory
-from modules.race import RaceManagement
-from modules.results import Results
-from modules.mission import MissionPlanning
+import os
+from modules.registration import validate_registration
 
 class StreetRaceManager:
     def __init__(self):
-        self.registration = Registration()
-        self.crew = CrewManagement(self.registration)
-        self.inventory = Inventory()
-        self.race_management = RaceManagement(self.crew, self.inventory)
-        self.results = Results(self.race_management, self.crew, self.inventory)
-        self.mission_planning = MissionPlanning(self.crew, self.inventory)
-        self.tuning = None
-        self.reputation = None
+        self.crew = {} # member_id: {name, role, skill_level}
+        self.inventory = {
+            "cars": [],
+            "parts": [],
+            "tools": [],
+            "cash": 0
+        }
+        self.races = []
+        self.missions = []
 
-    def run(self):
-        print("StreetRace Manager Initialized with All Core Modules.")
-        # Placeholder for main loop or logic
+    def register_member(self, name, role):
+        if not validate_registration(name, role):
+            print(f"Error: Invalid registration for {name} with role {role}.")
+            return None
+        
+        member_id = len(self.crew) + 1
+        self.crew[member_id] = {
+            "name": name,
+            "role": role,
+            "skill_level": 1 # Default 
+        }
+        return member_id
+
+    def get_crew(self):
+        return self.crew

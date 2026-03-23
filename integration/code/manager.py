@@ -1,6 +1,7 @@
 from modules.registration import validate_registration
 from modules.crew import validate_role, validate_skill_level
 from modules.inventory import validate_item_type
+from modules.race import validate_race_participants
 
 class StreetRaceManager:
     def __init__(self):
@@ -60,6 +61,26 @@ class StreetRaceManager:
 
     def get_inventory(self):
         return self.inventory
+
+    def create_race(self, race_name, driver_id, car_name):
+        valid, message = validate_race_participants(self, driver_id, car_name)
+        if not valid:
+            print(f"Error: {message}")
+            return False
+        
+        race = {
+            "id": len(self.races) + 1,
+            "name": race_name,
+            "driver_id": driver_id,
+            "driver_name": self.crew[driver_id]["name"],
+            "car_name": car_name,
+            "status": "Scheduled"
+        }
+        self.races.append(race)
+        return True
+
+    def get_races(self):
+        return self.races
 
     def get_crew(self):
         return self.crew

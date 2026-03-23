@@ -1,6 +1,7 @@
 import sys
 from manager import StreetRaceManager
 from modules.inventory import format_inventory
+from modules.race import format_race
 
 def main():
     manager = StreetRaceManager()
@@ -14,7 +15,9 @@ def main():
         print("4. Update Member Skill Level")
         print("5. View Inventory")
         print("6. Add Item to Inventory")
-        print("7. Exit")
+        print("7. Create Race")
+        print("8. View Scheduled Races")
+        print("9. Exit")
         
         choice = input("Select an option: ")
         
@@ -61,6 +64,24 @@ def main():
                 print(f"{item_name} added to {item_type}.")
 
         elif choice == '7':
+            race_name = input("Enter race name: ")
+            try:
+                mid = int(input("Enter driver ID: "))
+                car_name = input("Enter car name: ")
+                if manager.create_race(race_name, mid, car_name):
+                    print(f"Race '{race_name}' created successfully.")
+            except ValueError:
+                print("Invalid input. Driver ID must be an integer.")
+
+        elif choice == '8':
+            races = manager.get_races()
+            if not races:
+                print("No races scheduled.")
+            else:
+                for race in races:
+                    print(format_race(race))
+
+        elif choice == '9':
             print("Exiting StreetRace Manager. Stay safe on the streets!")
             break
         

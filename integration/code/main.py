@@ -1,5 +1,6 @@
 import sys
 from manager import StreetRaceManager
+from modules.inventory import format_inventory
 
 def main():
     manager = StreetRaceManager()
@@ -11,7 +12,9 @@ def main():
         print("2. View Crew")
         print("3. Update Member Role")
         print("4. Update Member Skill Level")
-        print("5. Exit")
+        print("5. View Inventory")
+        print("6. Add Item to Inventory")
+        print("7. Exit")
         
         choice = input("Select an option: ")
         
@@ -49,6 +52,15 @@ def main():
                 print("Invalid input. Member ID must be an integer.")
 
         elif choice == '5':
+            print(format_inventory(manager.get_inventory()))
+
+        elif choice == '6':
+            item_type = input("Enter item type (cars, parts, tools): ")
+            item_name = input("Enter item name/model: ")
+            if manager.add_inventory_item(item_type, item_name):
+                print(f"{item_name} added to {item_type}.")
+
+        elif choice == '7':
             print("Exiting StreetRace Manager. Stay safe on the streets!")
             break
         

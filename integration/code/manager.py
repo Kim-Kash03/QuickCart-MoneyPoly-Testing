@@ -1,5 +1,6 @@
 from modules.registration import validate_registration
 from modules.crew import validate_role, validate_skill_level
+from modules.inventory import validate_item_type
 
 class StreetRaceManager:
     def __init__(self):
@@ -45,6 +46,20 @@ class StreetRaceManager:
             return False
         self.crew[member_id]["skill_level"] = int(new_level)
         return True
+
+    def add_inventory_item(self, item_type, item_name):
+        if not validate_item_type(item_type):
+            print(f"Error: Invalid item type {item_type}.")
+            return False
+        self.inventory[item_type].append(item_name)
+        return True
+
+    def update_cash(self, amount):
+        self.inventory["cash"] += amount
+        return True
+
+    def get_inventory(self):
+        return self.inventory
 
     def get_crew(self):
         return self.crew
